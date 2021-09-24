@@ -17,7 +17,9 @@ export class UserCredentials {
 
     constructor(email: string, password: string) {
         this.email = email;
-        this.password = bcrypt.hashSync(password, 10);
+        if (!!password) {
+            this.password = bcrypt.hashSync(password, 10);
+        }
     }
 
     authenticate(password: string) {

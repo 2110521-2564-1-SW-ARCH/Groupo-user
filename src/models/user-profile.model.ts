@@ -14,10 +14,10 @@ export class UserProfile {
     @JoinColumn({name: "user_credentials_email"})
     userCredentials: UserCredentials;
 
-    constructor(displayName: string, firstName: string, lastName: string, email: string, password: string) {
+    constructor(displayName: string, firstName: string, lastName: string, credentials: UserCredentials) {
         this.displayName = displayName;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.userCredentials = new UserCredentials(email, password);
+        this.userCredentials = credentials;
     }
 }
