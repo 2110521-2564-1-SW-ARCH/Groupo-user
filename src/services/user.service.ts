@@ -2,15 +2,18 @@ import jwtService, {JWTService} from "./jwt.service";
 import {Repository} from "typeorm";
 import {AuthenticationError, UserCredentials} from "../models/user-credentials.model";
 import {getConnection} from "../datasource/mysql";
+import {UserProfile} from "../models/user-profile.model";
 
 export class UserService {
     private jwtService: JWTService;
     private userCredentialsRepository: Repository<UserCredentials>;
+    private userProfileRepository: Repository<UserProfile>;
 
     constructor(j: JWTService) {
         this.jwtService = j;
         getConnection().then(connection => {
             this.userCredentialsRepository = connection.getRepository(UserCredentials);
+            this.userProfileRepository = connection.getRepository(UserProfile);
         });
     }
 
@@ -45,6 +48,11 @@ export class UserService {
             accessToken: this.jwtService.generateAccessToken({email: payload.email}),
             refreshToken: userCredentials.refreshToken,
         };
+    }
+
+    async register(displayName: string, firstName: string, lastName: string, email: string, password: string) {
+        const profile = new UserProfile(displayName, firstName, lastName, email, password);
+        await this.userProfileRepository.save(profile);
     }
 }
 

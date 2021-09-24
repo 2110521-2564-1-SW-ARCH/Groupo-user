@@ -4,6 +4,8 @@ import {AuthenticationError, UserCredentials} from "../models/user-credentials.m
 import {LoginResponse} from "./responses/login.response";
 import userService, {UserService} from "../services/user.service";
 import {RefreshRequest} from "./requests/refresh.request";
+import {RegisterRequest} from "./requests/register.request";
+import {StatusCodes} from "http-status-codes";
 
 export class UserController {
     userService: UserService;
@@ -33,7 +35,15 @@ export class UserController {
         const {accessToken, refreshToken} = await this.userService.refreshToken(token);
 
         const response: LoginResponse = {accessToken, refreshToken};
-        res.json(response);
+        res.status(StatusCodes.OK).json(response);
+    }
+
+    register: express.Handler = async (req: express.Request, res: express.Response) => {
+        const {displayName, firstName, lastName, email, password} = req.body() as RegisterRequest;
+
+        await this.userService.register(displayName, firstName, lastName, email, password);
+
+        res.status(StatusCodes.CREATED).send();
     }
 }
 

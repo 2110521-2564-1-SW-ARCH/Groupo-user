@@ -7,10 +7,17 @@ export class UserProfile {
     profileID: string;
 
     @Column({length: 255, name: "display_name"}) displayName: string;
-    @Column({length: 255, name: "first_name"}) firstname: string;
-    @Column({length: 255, name: "last_name"}) lastname: string;
+    @Column({length: 255, name: "first_name"}) firstName: string;
+    @Column({length: 255, name: "last_name"}) lastName: string;
 
     @OneToOne(() => UserCredentials)
     @JoinColumn({name: "user_credentials_email"})
     userCredentials: UserCredentials;
+
+    constructor(displayName: string, firstName: string, lastName: string, email: string, password: string) {
+        this.displayName = displayName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userCredentials = new UserCredentials(email, password);
+    }
 }
