@@ -1,10 +1,20 @@
-import express from "express"
-import routes from "./routes/index"
+import * as dotenv from "dotenv";
+dotenv.config({ path: __dirname+'/../.env' });
 
-const app = express()
+import express from "express";
+import routes from "./routes/index";
+import {errorHandler} from "./error";
 
-app.use(routes)
+const app = express();
 
-app.get("/", (req, res) => res.send("Hello, World!"))
-app.listen(8080, () => console.log("running on 8080"))
+app.use(express.json());
 
+app.use(routes);
+
+app.use(errorHandler);
+
+const port = process.env.APP_PORT || "8080";
+app.listen(port, () => {
+    console.log("start application successfully");
+    console.log(`application is running on port ${port}`);
+});

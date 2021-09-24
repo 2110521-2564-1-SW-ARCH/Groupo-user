@@ -1,10 +1,11 @@
 import { Router } from "express"
-import { login, logout, register } from "../controllers/users"
+import userController from "../controllers/users.controller"
+import {asyncErrorHandling} from "../error";
 
 const userRouter = Router();
 
-userRouter.post('/register', register)
-userRouter.post('/login', login)
-userRouter.post('/logout', logout)
+userRouter.post("/register", asyncErrorHandling(userController.register));
+userRouter.post("/login", asyncErrorHandling(userController.login));
+userRouter.get("/refresh", asyncErrorHandling(userController.refreshToken));
 
-export default userRouter
+export default userRouter;
