@@ -21,6 +21,10 @@ export class UserService {
         return await this.userCredentialsRepository.findOneOrFail({where: [{email}]});
     }
 
+    async findProfile(email: string): Promise<UserProfile> {
+        return await this.userProfileRepository.findOneOrFail({where: [{email}]});
+    }
+
     async authenticate(email: string, password: string): Promise<{ accessToken: string, refreshToken: string }>{
         const userCredentials = await this.findCredentials(email);
         userCredentials.authenticate(password);
@@ -52,9 +56,9 @@ export class UserService {
 
     async register(displayName: string, firstName: string, lastName: string, email: string, password: string) {
         const credentials = new UserCredentials(email, password);
-        await this.userCredentialsRepository.save(credentials);
+        await this.userCredentialsRepository.insert(credentials);
         const profile = new UserProfile(displayName, firstName, lastName, credentials);
-        await this.userProfileRepository.save(profile);
+        await this.userProfileRepository.insert(profile);
     }
 }
 
