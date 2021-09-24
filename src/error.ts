@@ -42,6 +42,7 @@ export const errorHandler: express.ErrorRequestHandler = (err: any, req: express
             sendResponse(res, apiError.response());
             break;
         default:
+            console.log("internal server error:", err.message);
             const internalError = new InternalServerError();
             sendResponse(res, internalError.response());
     }
