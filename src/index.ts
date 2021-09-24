@@ -1,13 +1,16 @@
-import express from "express"
-import routes from "./routes/index"
+import * as dotenv from "dotenv";
+dotenv.config({ path: __dirname+'/../.env' });
 
-const app = express()
+import express from "express";
+import routes from "./routes/index";
 
-app.use(routes)
-app.get("/", (req, res) => res.send("Hello, World!"))
+const app = express();
 
-const port = process.env.APP_PORT || "8080"
+app.use(routes);
+app.use(express.json());
+
+const port = process.env.APP_PORT || "8080";
 app.listen(port, () => {
-    console.log("start application successfully")
-    console.log(`application is running on port ${port}`)
-})
+    console.log("start application successfully");
+    console.log(`application is running on port ${port}`);
+});

@@ -1,10 +1,9 @@
 import { Router } from "express"
-import { login, logout, register } from "../controllers/users"
+import userController from "../controllers/users.controller"
 
 const userRouter = Router();
 
-userRouter.post('/register', register)
-userRouter.post('/login', login)
-userRouter.post('/logout', logout)
+userRouter.post("/login", userController.login);
+userRouter.get("/refresh", userController.refreshToken);
 
-export default userRouter
+export default userRouter;
