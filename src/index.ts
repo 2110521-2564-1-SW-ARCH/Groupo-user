@@ -15,6 +15,6 @@ app.use(errorHandler);
 
 const port = process.env.APP_PORT || "8080";
 app.listen(port, () => {
-    console.log("start application successfully");
-    console.log(`application is running on port ${port}`);
+    console.log("Started groupo-user successfully");
+    console.log(`groupo-user is running on port ${port}`);
 });
