@@ -15,7 +15,7 @@ export class UserProfile {
     userCredentials: UserCredentials;
 
     constructor(displayName: string, firstName: string, lastName: string, credentials: UserCredentials) {
-        this.displayName = displayName;
+        this.displayName = displayName ? displayName : firstName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userCredentials = credentials;
