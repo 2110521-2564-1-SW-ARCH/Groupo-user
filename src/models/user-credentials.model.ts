@@ -1,13 +1,6 @@
 import * as bcrypt from "bcrypt";
-import {Column, Entity, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
-import {APIError} from "../error";
-import {StatusCodes} from 'http-status-codes';
-
-export class AuthenticationError extends APIError {
-    constructor() {
-        super(StatusCodes.UNAUTHORIZED);
-    }
-}
+import {Column, Entity, PrimaryColumn} from "typeorm";
+import {UnauthorizedError} from "groupo-shared-service/apiutils/errors";
 
 @Entity("user_credentials")
 export class UserCredentials {
@@ -24,10 +17,10 @@ export class UserCredentials {
 
     authenticate(password: string) {
         if (this.password === "") {
-            throw new AuthenticationError();
+            throw new UnauthorizedError();
         }
         if (!bcrypt.compareSync(password, this.password)) {
-            throw new AuthenticationError();
+            throw new UnauthorizedError();
         }
     }
 }

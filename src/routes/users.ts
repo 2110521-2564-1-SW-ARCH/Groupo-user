@@ -1,11 +1,11 @@
-import { Router } from "express"
-import userController from "../controllers/users.controller"
-import {asyncErrorHandling} from "../error";
+import { Router } from "express";
+import {catcher} from "groupo-shared-service/apiutils/errors";
+import userController from "../controllers/users.controller";
 
 const userRouter = Router();
 
-userRouter.post("/register", asyncErrorHandling(userController.register));
-userRouter.post("/login", asyncErrorHandling(userController.login));
-userRouter.get("/refresh", asyncErrorHandling(userController.refreshToken));
+userRouter.post("/register", catcher(userController.register));
+userRouter.post("/login", catcher(userController.login));
+userRouter.get("/refresh", catcher(userController.refreshToken));
 
 export default userRouter;

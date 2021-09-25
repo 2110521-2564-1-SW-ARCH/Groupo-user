@@ -1,16 +1,15 @@
-import jwtService, {JWTService} from "./jwt.service";
+import {generateRefreshToken, generateAccessToken, verifyToken} from "groupo-shared-service/services/authentication";
 import {Repository} from "typeorm";
-import {AuthenticationError, UserCredentials} from "../models/user-credentials.model";
+import {UserCredentials} from "../models/user-credentials.model";
 import {getConnection} from "../datasource/mysql";
 import {UserProfile} from "../models/user-profile.model";
+import {UnauthorizedError} from "groupo-shared-service/apiutils/errors";
 
 export class UserService {
-    private jwtService: JWTService;
     private userCredentialsRepository: Repository<UserCredentials>;
     private userProfileRepository: Repository<UserProfile>;
 
-    constructor(j: JWTService) {
-        this.jwtService = j;
+    constructor() {
         getConnection().then(connection => {
             this.userCredentialsRepository = connection.getRepository(UserCredentials);
             this.userProfileRepository = connection.getRepository(UserProfile);
@@ -21,35 +20,31 @@ export class UserService {
         return await this.userCredentialsRepository.findOneOrFail({where: [{email}]});
     }
 
-    async findProfile(email: string): Promise<UserProfile> {
-        return await this.userProfileRepository.findOneOrFail({where: [{email}]});
-    }
-
     async authenticate(email: string, password: string): Promise<{ accessToken: string, refreshToken: string }>{
         const userCredentials = await this.findCredentials(email);
         userCredentials.authenticate(password);
 
-        userCredentials.refreshToken = this.jwtService.generateRefreshToken({email});
+        userCredentials.refreshToken = generateRefreshToken(email);
         await this.userCredentialsRepository.save(userCredentials);
 
         return {
-            accessToken: this.jwtService.generateAccessToken({email}),
+            accessToken: generateAccessToken(email),
             refreshToken: userCredentials.refreshToken,
         };
     }
 
     async refreshToken(token: string): Promise<{ accessToken: string, refreshToken: string }> {
-        const payload = this.jwtService.verify(token);
+        const payload = verifyToken(token);
         const userCredentials = await this.findCredentials(payload.email);
         if (userCredentials.refreshToken !== token) {
-            throw new AuthenticationError();
+            throw new UnauthorizedError();
         }
 
-        userCredentials.refreshToken = this.jwtService.generateRefreshToken({email: payload.email});
+        userCredentials.refreshToken = generateRefreshToken(payload.email);
         await this.userCredentialsRepository.save(userCredentials);
 
         return {
-            accessToken: this.jwtService.generateAccessToken({email: payload.email}),
+            accessToken: generateAccessToken(payload.email),
             refreshToken: userCredentials.refreshToken,
         };
     }
@@ -62,5 +57,5 @@ export class UserService {
     }
 }
 
-const userService: UserService = new UserService(jwtService);
+const userService: UserService = new UserService();
 export default userService;

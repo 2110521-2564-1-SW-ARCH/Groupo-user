@@ -14,8 +14,8 @@ export const getConnection = async (): Promise<Connection> => {
             entities: [__dirname + "/../models/*.ts"],
             synchronize: true,
             logging: false,
-        })
-        console.log(`connect to database successfully (host=${process.env.MYSQL_HOST})`)
+        });
+        console.log(`connect to database successfully (host=${process.env.MYSQL_HOST})`);
     }
     return connection;
-}
+};
