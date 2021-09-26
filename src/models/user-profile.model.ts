@@ -6,7 +6,6 @@ export class UserProfile {
     @PrimaryGeneratedColumn("uuid", {name: "profile_id"})
     profileID: string;
 
-    @Column({length: 255, name: "display_name"}) displayName: string;
     @Column({length: 255, name: "first_name"}) firstName: string;
     @Column({length: 255, name: "last_name"}) lastName: string;
 
@@ -15,7 +14,6 @@ export class UserProfile {
     userCredentials: UserCredentials;
 
     constructor(firstName: string, lastName: string, credentials: UserCredentials) {
-        this.displayName = firstName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userCredentials = credentials;
