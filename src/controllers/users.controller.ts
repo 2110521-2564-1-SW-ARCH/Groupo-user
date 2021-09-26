@@ -42,9 +42,9 @@ export class UserController {
     }
 
     register: express.Handler = async (req: express.Request, res: express.Response) => {
-        const {displayName, firstName, lastName, email, password} = req.body as RegisterRequest;
+        const {firstName, lastName, email, password} = req.body as RegisterRequest;
 
-        await this.userService.register(displayName, firstName, lastName, email, password);
+        await this.userService.register(firstName, lastName, email, password);
 
         const response: APIResponse<string> = {
             status: StatusCodes.CREATED,

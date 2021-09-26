@@ -49,10 +49,10 @@ export class UserService {
         };
     }
 
-    async register(displayName: string, firstName: string, lastName: string, email: string, password: string) {
+    async register(firstName: string, lastName: string, email: string, password: string) {
         const credentials = new UserCredentials(email, password);
         await this.userCredentialsRepository.insert(credentials);
-        const profile = new UserProfile(displayName, firstName, lastName, credentials);
+        const profile = new UserProfile(firstName, lastName, credentials);
         await this.userProfileRepository.insert(profile);
     }
 }

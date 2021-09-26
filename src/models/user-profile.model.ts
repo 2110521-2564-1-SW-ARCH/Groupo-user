@@ -14,8 +14,8 @@ export class UserProfile {
     @JoinColumn({name: "user_credentials_email"})
     userCredentials: UserCredentials;
 
-    constructor(displayName: string, firstName: string, lastName: string, credentials: UserCredentials) {
-        this.displayName = displayName ? displayName : firstName;
+    constructor(firstName: string, lastName: string, credentials: UserCredentials) {
+        this.displayName = firstName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userCredentials = credentials;
