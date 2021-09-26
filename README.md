@@ -4,7 +4,7 @@
 
 ### API Interface
 
-all interfaces are in `common-shared-service`
+all interfaces are in `common-shared-service`.
 
 ##### Open Interface
 
@@ -23,3 +23,5 @@ all interfaces are in `common-shared-service`
 to use these interface, `Authorization` Header must be provided with `Bearer` token
 
 - `GET /profile (EMPTY => ProfileResponse)`, to get user profile
+
+- `PATCH /profile (UpdateProfileRequest => EMPTY)`, to get user profile

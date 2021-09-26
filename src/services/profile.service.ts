@@ -22,3 +22,10 @@ export const getProfile = async (email: string): Promise<ProfileResponse> => {
     const {firstName, lastName, userCredentials} = await userProfileRepository().findOneOrFail({where: [{user_credentials_email: email}]});
     return {firstName, lastName, email: userCredentials.email};
 };
+
+export const updateProfile = async (email: string, firstName: string, lastName: string) => {
+    const profile = await userProfileRepository().findOneOrFail({where: [{user_credentials_email: email}]});
+    profile.firstName = firstName;
+    profile.lastName = lastName;
+    await userProfileRepository().save(profile);
+};
