@@ -11,6 +11,11 @@ const userProfileRepository = (): Repository<UserProfile> => {
     return getConnection().getRepository(UserProfile);
 };
 
+const getUserProfile = async (email: string): Promise<UserProfile> => {
+    return await getConnection()
+        .createQueryBuilder(UserProfile, "userProfile").where("userProfile.user_credentials_email=:email", {email}).getOne();
+}
+
 export const register = async (firstName: string, lastName: string, email: string, password: string) => {
     const credentials = new UserCredentials(email, password);
     await userCredentialsRepository().insert(credentials);
@@ -19,12 +24,12 @@ export const register = async (firstName: string, lastName: string, email: strin
 };
 
 export const getProfile = async (email: string): Promise<ProfileResponse> => {
-    const {firstName, lastName, userCredentials} = await userProfileRepository().findOneOrFail({where: [{user_credentials_email: email}]});
-    return {firstName, lastName, email: userCredentials.email};
+    const {firstName, lastName} = await getUserProfile(email);
+    return {firstName, lastName, email};
 };
 
 export const updateProfile = async (email: string, firstName: string, lastName: string) => {
-    const profile = await userProfileRepository().findOneOrFail({where: [{user_credentials_email: email}]});
+    const profile = await getUserProfile(email);
     profile.firstName = firstName;
     profile.lastName = lastName;
     await userProfileRepository().save(profile);
