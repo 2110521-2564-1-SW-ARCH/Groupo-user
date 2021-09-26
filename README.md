@@ -24,4 +24,4 @@ to use these interface, `Authorization` Header must be provided with `Bearer` to
 
 - `GET /profile (EMPTY => ProfileResponse)`, to get user profile
 
-- `PATCH /profile (UpdateProfileRequest => EMPTY)`, to get user profile
+- `PATCH /profile (UpdateProfileRequest => EMPTY)`, to update user profile
