@@ -1031,7 +1031,7 @@ graceful-fs@^4.1.2:
 
 "groupo-shared-service@https://github.com/2110521-2564-1-SW-ARCH/Groupo-shared-services.git":
   version "1.0.0"
-  resolved "https://github.com/2110521-2564-1-SW-ARCH/Groupo-shared-services.git#46df7bc465786134f71a7b8d292244984c1aeb3f"
+  resolved "https://github.com/2110521-2564-1-SW-ARCH/Groupo-shared-services.git#426ea3a44701f2cfaa6ca5be38fd9c7d324be87f"
   dependencies:
     "@grpc/grpc-js" "^1.3.7"
     "@grpc/proto-loader" "^0.6.5"
