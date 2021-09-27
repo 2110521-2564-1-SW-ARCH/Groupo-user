@@ -10,7 +10,7 @@ import {
     RefreshRequest,
 } from "groupo-shared-service/apiutils/messages";
 
-export const login: express.Handler = catcher(async (req: express.Request, res: express.Response) => {
+export const login: express.Handler = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const {email, password} = req.body as LoginRequest;
     if (!email) {
         throw new UnauthorizedError();
@@ -19,9 +19,10 @@ export const login: express.Handler = catcher(async (req: express.Request, res: 
     const response = await UserService.authenticate(email, password);
 
     json(res, newAPIResponse<LoginResponse>(StatusCodes.OK, response));
+    next();
 });
 
-export const refreshAccessToken: express.Handler = catcher(async (req: express.Request, res: express.Response) => {
+export const refreshAccessToken: express.Handler = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const {refreshToken: token} = req.body as RefreshRequest;
     if (!token) {
         throw new UnauthorizedError();
@@ -30,4 +31,5 @@ export const refreshAccessToken: express.Handler = catcher(async (req: express.R
     const response = await UserService.refreshAccessToken(token);
 
     json(res, newAPIResponse<LoginResponse>(StatusCodes.OK, response));
+    next();
 });

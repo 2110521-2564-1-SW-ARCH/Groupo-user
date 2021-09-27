@@ -15,14 +15,17 @@ initMySQLConnection(__dirname + "/models/*.ts");
 
 // init logger
 import {logger, registerApplicationLogger, handler as grpcHandler} from "groupo-shared-service/services/logger";
+import {httpLogger, prepareHttpLogger} from "groupo-shared-service/apiutils/middleware";
 registerApplicationLogger("user-service");
 
 const app = express();
 
 // pipeline request
 app.use(cors());
+app.use(prepareHttpLogger);
 app.use(express.json());
 app.use(routes);
+app.use(httpLogger);
 app.use(errorHandler);
 
 // start server
