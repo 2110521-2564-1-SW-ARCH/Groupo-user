@@ -6,14 +6,15 @@ import routes from "./routes/index";
 import cors from 'cors';
 
 // shared service
-import {handler} from "groupo-shared-service/apiutils/errors";
+import {handler as errorHandler} from "groupo-shared-service/apiutils/errors";
+import {LoggingGrpcClient} from "groupo-shared-service/grpc/client";
 
 // init datasource
 import {initMySQLConnection} from "groupo-shared-service/datasource/mysql";
 initMySQLConnection(__dirname + "/models/*.ts");
 
 // init logger
-import {logger, registerApplicationLogger} from "groupo-shared-service/logging/logger";
+import {logger, registerApplicationLogger, handler as grpcHandler} from "groupo-shared-service/services/logger";
 registerApplicationLogger("user-service");
 
 const app = express();
@@ -22,11 +23,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(routes);
-app.use(handler);
+app.use(errorHandler);
 
 // start server
 const port = process.env.APP_PORT || "8080";
 app.listen(port, () => {
-    logger.info("start groupo-user successfully");
-    logger.field("application-port", port).info("groupo-user is running");
+    LoggingGrpcClient.Info(logger.message("start groupo-user successfully").proto(), grpcHandler);
+    LoggingGrpcClient.Info(logger.set("APP_PORT", port).message("groupo-user is running").proto(), grpcHandler);
 });
