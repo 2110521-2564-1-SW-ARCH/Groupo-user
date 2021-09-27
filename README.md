@@ -4,6 +4,10 @@
 
 ### Environment Variable
 
+application configuration
+
+- `APP_PORT`, to assign listening port to this service.
+
 mysql configuration
 
 - `MYSQL_HOST`, to select mysql host.
