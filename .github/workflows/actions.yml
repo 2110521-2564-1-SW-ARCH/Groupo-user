@@ -6,8 +6,8 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: groupo-cluster-1
   GKE_ZONE: asia-southeast1
-  DEPLOYMENT_NAME: groupo-ui
-  IMAGE: groupo-ui
+  DEPLOYMENT_NAME: groupo-user
+  IMAGE: groupo-user
 
 jobs:
   setup-build-publish:
