@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: groupo-user
+spec:
+  selector:
+    app: groupo-user
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: LoadBalancer

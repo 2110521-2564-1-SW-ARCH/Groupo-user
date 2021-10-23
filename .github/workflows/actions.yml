@@ -44,13 +44,8 @@ jobs:
       run: |-
         docker push "asia.gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
-    - name: Checkout to k8s repository
-      uses: actions/checkout@v2
-      with:
-        repository: 2110521-2564-1-SW-ARCH/Groupo-devops-k8s
-
     - name: Deploy
       run: |-
-        cd groupo-user
+        cd k8s
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
