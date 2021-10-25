@@ -46,8 +46,5 @@ jobs:
 
     - name: Deploy
       run: |-
-        cd k8s
         kubectl set image deployment/$DEPLOYMENT_NAME $DEPLOYMENT_NAME=asia.gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA 
-        kubectl apply -f deployment.yaml
-        kubectl apply -f service.yaml
         kubectl rollout status deployment/$DEPLOYMENT_NAME
