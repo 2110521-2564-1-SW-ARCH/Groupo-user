@@ -42,7 +42,7 @@ jobs:
 
     - name: Publish
       run: |-
-        docker push "asia.gcr.io/$PROJECT_ID/$IMAGE:latest"
+        docker push "asia.gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
 
     - name: Deploy
       run: |-
