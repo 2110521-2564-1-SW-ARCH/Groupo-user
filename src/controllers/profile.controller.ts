@@ -12,16 +12,16 @@ import {StatusCodes} from "http-status-codes";
 import {getExpressRequestContext} from "groupo-shared-service/services/express";
 
 export const register = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const {firstName, lastName, email, password} = req.body as RegisterRequest;
+    const ctx = getExpressRequestContext<RegisterRequest>(req);
 
-    await ProfileService.register(firstName, lastName, email, password);
+    await ProfileService.register(ctx);
 
     json(res, newAPIResponse<string>(StatusCodes.OK, ""));
     next();
 });
 
 export const getProfile = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const ctx = getExpressRequestContext(req);
+    const ctx = getExpressRequestContext<undefined>(req);
 
     const response = await ProfileService.getProfile(ctx);
 
@@ -30,11 +30,9 @@ export const getProfile = catcher(async (req: express.Request, res: express.Resp
 });
 
 export const updateProfile = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const ctx = getExpressRequestContext(req);
+    const ctx = getExpressRequestContext<UpdateProfileRequest>(req);
 
-    const {firstName, lastName} = req.body as UpdateProfileRequest;
-
-    await ProfileService.updateProfile(ctx, firstName, lastName);
+    await ProfileService.updateProfile(ctx);
 
     json(res, newAPIResponse<string>(StatusCodes.OK, ""));
     next();

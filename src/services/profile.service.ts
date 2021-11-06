@@ -1,6 +1,6 @@
 import {UserCredentials} from "../models/user-credentials.model";
 import {UserProfile} from "../models/user-profile.model";
-import {ProfileResponse} from "groupo-shared-service/apiutils/messages";
+import {ProfileResponse, RegisterRequest, UpdateProfileRequest} from "groupo-shared-service/apiutils/messages";
 import {getConnection, Repository} from "typeorm";
 import {ExpressRequestCtx} from "groupo-shared-service/types/express";
 
@@ -15,23 +15,23 @@ const userProfileRepository = (): Repository<UserProfile> => {
 const getUserProfile = async (email: string): Promise<UserProfile> => {
     return await getConnection()
         .createQueryBuilder(UserProfile, "userProfile").where("userProfile.user_credentials_email=:email", {email}).getOne();
-}
+};
 
-export const register = async (firstName: string, lastName: string, email: string, password: string) => {
-    const credentials = new UserCredentials(email, password);
+export const register = async (ctx: ExpressRequestCtx<RegisterRequest>) => {
+    const credentials = new UserCredentials(ctx.body.email, ctx.body.password);
     await userCredentialsRepository().insert(credentials);
-    const profile = new UserProfile(firstName, lastName, credentials);
+    const profile = new UserProfile(ctx.body.firstName, ctx.body.lastName, credentials);
     await userProfileRepository().insert(profile);
 };
 
-export const getProfile = async (ctx: ExpressRequestCtx): Promise<ProfileResponse> => {
+export const getProfile = async (ctx: ExpressRequestCtx<undefined>): Promise<ProfileResponse> => {
     const {firstName, lastName} = await getUserProfile(ctx.email);
     return {firstName, lastName, email: ctx.email};
 };
 
-export const updateProfile = async (ctx: ExpressRequestCtx, firstName: string, lastName: string) => {
+export const updateProfile = async (ctx: ExpressRequestCtx<UpdateProfileRequest>) => {
     const profile = await getUserProfile(ctx.email);
-    profile.firstName = firstName;
-    profile.lastName = lastName;
+    profile.firstName = ctx.body.firstName;
+    profile.lastName = ctx.body.lastName;
     await userProfileRepository().save(profile);
 };

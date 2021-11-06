@@ -9,26 +9,28 @@ import {
     newAPIResponse,
     RefreshRequest,
 } from "groupo-shared-service/apiutils/messages";
+import {getExpressRequestContext} from "groupo-shared-service/services/express";
 
 export const login: express.Handler = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const {email, password} = req.body as LoginRequest;
-    if (!email) {
+    const ctx = getExpressRequestContext<LoginRequest>(req);
+    if (!ctx.body.email) {
         throw new UnauthorizedError();
     }
 
-    const response = await UserService.authenticate(email, password);
+    const response = await UserService.authenticate(ctx);
 
     json(res, newAPIResponse<LoginResponse>(StatusCodes.OK, response));
     next();
 });
 
 export const refreshAccessToken: express.Handler = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const {refreshToken: token} = req.body as RefreshRequest;
-    if (!token) {
+    const ctx = getExpressRequestContext<RefreshRequest>(req);
+
+    if (!ctx.body.refreshToken) {
         throw new UnauthorizedError();
     }
 
-    const response = await UserService.refreshAccessToken(token);
+    const response = await UserService.refreshAccessToken(ctx.body.refreshToken);
 
     json(res, newAPIResponse<LoginResponse>(StatusCodes.OK, response));
     next();

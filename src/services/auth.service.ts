@@ -2,7 +2,8 @@ import {generateAccessToken, generateRefreshToken, verifyToken} from "groupo-sha
 import {getConnection, Repository} from "typeorm";
 import {UserCredentials} from "../models/user-credentials.model";
 import {UnauthorizedError} from "groupo-shared-service/apiutils/errors";
-import {LoginResponse} from "groupo-shared-service/apiutils/messages";
+import {LoginRequest, LoginResponse} from "groupo-shared-service/apiutils/messages";
+import {ExpressRequestCtx} from "groupo-shared-service/types/express";
 
 const userCredentialsRepository = (): Repository<UserCredentials> => {
     return getConnection().getRepository(UserCredentials);
@@ -12,15 +13,15 @@ const findCredentials = async (email: string): Promise<UserCredentials> => {
     return await userCredentialsRepository().findOneOrFail({where: [{email}]});
 };
 
-export const authenticate = async (email: string, password: string): Promise<LoginResponse> => {
-    const userCredentials = await findCredentials(email);
-    userCredentials.authenticate(password);
+export const authenticate = async (ctx: ExpressRequestCtx<LoginRequest>): Promise<LoginResponse> => {
+    const userCredentials = await findCredentials(ctx.body.email);
+    userCredentials.authenticate(ctx.body.password);
 
-    userCredentials.refreshToken = generateRefreshToken(email);
+    userCredentials.refreshToken = generateRefreshToken(ctx.body.email);
     await userCredentialsRepository().save(userCredentials);
 
     return {
-        accessToken: generateAccessToken(email),
+        accessToken: generateAccessToken(ctx.body.email),
         refreshToken: userCredentials.refreshToken,
     };
 };
