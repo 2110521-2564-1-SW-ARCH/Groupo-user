@@ -12,7 +12,7 @@ import {StatusCodes} from "http-status-codes";
 import {getExpressRequestContext} from "groupo-shared-service/services/express";
 
 export const register = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const ctx = getExpressRequestContext<RegisterRequest>(req);
+    const ctx = getExpressRequestContext<RegisterRequest>(req, false);
 
     await ProfileService.register(ctx);
 

@@ -12,7 +12,7 @@ import {
 import {getExpressRequestContext} from "groupo-shared-service/services/express";
 
 export const login: express.Handler = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const ctx = getExpressRequestContext<LoginRequest>(req);
+    const ctx = getExpressRequestContext<LoginRequest>(req, false);
     if (!ctx.body.email) {
         throw new UnauthorizedError();
     }
@@ -24,7 +24,7 @@ export const login: express.Handler = catcher(async (req: express.Request, res: 
 });
 
 export const refreshAccessToken: express.Handler = catcher(async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const ctx = getExpressRequestContext<RefreshRequest>(req);
+    const ctx = getExpressRequestContext<RefreshRequest>(req, false);
 
     if (!ctx.body.refreshToken) {
         throw new UnauthorizedError();
